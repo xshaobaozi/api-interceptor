@@ -1,0 +1,13 @@
+{
+  "name": "packages",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "dev": "webpack --config webpack.config.js --watch"
+  },
+  "dependencies": {
+    "webpack": "^5.72.1"
+  }
+}

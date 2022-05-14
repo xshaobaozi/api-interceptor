@@ -1,0 +1,1 @@
+(()=>{"use strict";chrome.runtime.connect().onMessage.addListener((e=>{console.log("content 长链接 ",e),setTimeout((()=>{console.log(222222),chrome.runtime.sendMessage({type:"toPanel",result:{message:"这是content成功的消息"}},(e=>{console.log("call ok",e,new Date)}))}),2e3)}))})();

@@ -1,0 +1,1 @@
+(()=>{"use strict";var e=null;chrome.runtime.onConnect.addListener((function(t){e=t})),chrome.runtime.onMessage.addListener(((t,n,s)=>{"toContent"!==(t.type||"")?s(t):e.postMessage(t.result)}))})();

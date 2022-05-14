@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+  "name": "Api Interceptor",
+  "version": "0.0.1",
+
+  "description": "修改浏览器请求和管理接口",
+  "icons": {
+    "16": "images/16_gray.png",
+    "32": "images/32_gray.png",
+    "48": "images/48.png",
+    "128": "images/128.png"
+  },
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "devtools_page": "devtools/index.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["./contents.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "permissions": [
+    "webRequest",
+    "storage",
+    "tabs",
+    "http://*/",
+    "https://*/"
+  ],
+  "web_accessible_resources": [
+    "pageScripts/main.js",
+    "iframe/index.html"
+  ]
+}
