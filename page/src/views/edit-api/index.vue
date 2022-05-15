@@ -9,8 +9,8 @@
         <el-form-item label="URI" prop="uri">
           <el-input v-model="currentForm.uri" />
         </el-form-item>
-        <el-form-item label="描述" prop="summary">
-          <el-input v-model="currentForm.summary" />
+        <el-form-item label="描述" prop="desc">
+          <el-input v-model="currentForm.desc" />
         </el-form-item>
         <el-form-item label="方法" prop="methods">
           <el-radio-group v-model="currentForm.methods" size="small">
@@ -26,8 +26,8 @@
             <el-radio-button :label="false">关闭</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="完成" prop="finished">
-          <el-radio-group v-model="currentForm.finished" size="small">
+        <el-form-item label="完成" prop="finish">
+          <el-radio-group v-model="currentForm.finish" size="small">
             <el-radio-button :label="true">完成</el-radio-button>
             <el-radio-button :label="false">未完成</el-radio-button>
           </el-radio-group>
@@ -59,7 +59,7 @@ const treeInfo = reactive({
   checkKey: []
 })
 
-const currentForm = ref({ uri: '', summary: '', methods: '', response: {}, finished: false, disabled: false }
+const currentForm = ref({ uri: '', desc: '', method: '', response: {}, finish: false, disabled: false }
 )
 const menus = computed(() => {
   const source = apiStore.apis.map(formatSchema2Apis)
@@ -82,8 +82,8 @@ const renderContent = (h, { node, data, store }) => {
   if (!data.detail) {
     return h('h', { class: `fz12 ` }, node.label)
   }
-  const { finished } = data.detail;
-  return h('h', { class: `fz12 ${finished ? 'success-icon' : 'danger-icon'}` }, node.label)
+  const { finish } = data.detail;
+  return h('h', { class: `fz12 ${finish ? 'success-icon' : 'danger-icon'}` }, node.label)
 }
 </script>
 
