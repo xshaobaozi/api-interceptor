@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "clone": "^2.1.2",
     "core-js": "^3.6.5",
     "dayjs": "^1.11.2",
     "element-plus": "^2.2.0",

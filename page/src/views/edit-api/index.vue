@@ -67,6 +67,9 @@ const menus = computed(() => {
 })
 
 const handleNodeClick = (info) => {
+  if (!info.detail) {
+    return
+  }
   const { apisIdx } = info.detail
   const faterName = apiStore.apis[apisIdx].name
   treeInfo.expandKey = [faterName, info.label]

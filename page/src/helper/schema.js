@@ -1,5 +1,6 @@
 import { wapperKey } from '@/store/modules/apis';
 import { parse } from '@/store/modules/apis';
+const clone = require('clone');
 export const fromType = {
   Kepler: 'Kepler',
   Owner: 'Owner',
@@ -127,14 +128,40 @@ export const kepler2OwernData = (schema) => {
         id: `${uri}-${method}`,
         code: 200,
         // 不同状态码对应的response
-        response: {
-          200: {},
-        },
+        response: {},
       });
     });
   });
   return {
     info: { title },
     paths: children,
+  };
+};
+
+export const schemaMerge = (oldSchema, newSchema) => {
+  const { paths: oldPaths } = oldSchema;
+  const { paths: newPaths } = newSchema;
+  const paths = clone(oldPaths);
+  newPaths.forEach((newItem) => {
+    const idx = paths.findIndex((oldItem) => oldItem.id === newItem.id);
+    if (idx === -1) {
+      paths.push(newItem);
+      return;
+    }
+    paths[idx].desc = newItem.desc;
+    // paths[idx].disabled = newItem.disabled
+    // paths[idx].finish = newItem.finish
+    const res = paths[idx].response;
+    paths[idx].response = {
+      ...res,
+      ...newItem.response,
+    };
+    // paths[idx].code = newItem.code
+  });
+  return {
+    info: {
+      title: newSchema.info.title,
+    },
+    paths: paths,
   };
 };

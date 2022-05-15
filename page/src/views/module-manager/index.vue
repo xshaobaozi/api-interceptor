@@ -42,10 +42,20 @@
           <el-form-item label="模块名" prop="name">
             <el-input v-model="form.name" />
           </el-form-item>
-          <el-form-item label="来源" prop="from" v-if="!dialogConfig.isEdit">
-            <el-radio-group v-model="form.from" size="small">
+          <el-form-item label="来源" prop="from">
+            <el-radio-group
+              v-model="form.from"
+              size="small"
+              @change="handleFromChange"
+            >
               <el-radio-button :label="fromType.Owner">插件</el-radio-button>
               <el-radio-button :label="fromType.Kepler">Kepler</el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="合并" prop="merge" v-if="dialogConfig.isEdit">
+            <el-radio-group v-model="form.merge" size="small">
+              <el-radio-button :label="true">合并</el-radio-button>
+              <el-radio-button :label="false">覆盖</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="数据源" prop="schema">
@@ -84,6 +94,7 @@ const form = reactive({
   name: '',
   from: fromType.Owner,
   schema: '',
+  merge: false,
   id: '',
 });
 const rules = reactive({
@@ -113,6 +124,7 @@ const handleEdit = (row) => {
   form.name = row.name;
   form.id = row.id;
   form.from = fromType.Owner;
+  form.merge = false;
   form.schema = row.schema;
   dialogConfig.isEdit = true;
   dialogConfig.isShow = true;
@@ -122,6 +134,7 @@ const handleCreate = () => {
   dialogConfig.isEdit = false;
   form.name = '';
   form.schema = '';
+  form.merge = false;
   form.id = '';
   form.from = fromType.Owner;
 };
@@ -140,13 +153,22 @@ const handleDelete = (row) => {
     })
     .catch(() => {});
 };
+const handleFromChange = (val) => {
+  console.log(instance.refs['$form'].validateField('schema'));
+}
 const handleSave = () => {
   instance.refs['$form'].validate(async (valid, fields) => {
     if (!valid) {
       return;
     }
     if (dialogConfig.isEdit) {
-      apiStore.edit(form);
+      apiStore.edit({
+        ...form,
+        schema:
+          form.from === fromType.Owner
+            ? form.schema
+            : kepler2OwernData(form.schema),
+      });
       dialogConfig.isShow = false;
       return;
     }
@@ -163,6 +185,7 @@ const handleSave = () => {
 const handleReset = () => {
   form.name = '';
   form.id = '';
+  form.merge = false;
   form.from = fromType.Owner;
   form.schema = {
     info: {

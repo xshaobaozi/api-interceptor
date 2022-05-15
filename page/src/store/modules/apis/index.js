@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ElMessage } from 'element-plus';
 import { setStore, getStore } from './../../../helper/chrome';
+import { schemaMerge } from '@/helper/schema';
 import dayjs from 'dayjs';
 
 export const parse = (obj) => {
@@ -85,8 +86,11 @@ export default defineStore(ID, {
         return;
       }
       target.name = form.name;
-      target.schema = form.schema;
       target.update = dayjs(new Date()).format(format);
+      //合并数据
+      target.schema = form.merge
+        ? schemaMerge(target.schema, form.schema)
+        : form.schema;
       this.saveLocal();
     },
     // TODO修改数据逻辑有问题
