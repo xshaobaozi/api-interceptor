@@ -1,0 +1,1476 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "测试",
+      "version": "last",
+      "description": "测试"
+    },
+    "basePath": "/apis/card",
+    "tags": [
+      {
+        "name": "前台",
+        "description": "前台"
+      },
+      {
+        "name": "后台",
+        "description": "后台"
+      }
+    ],
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/login": {
+        "post": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "登录",
+          "description": "",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "root",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "mobile": {
+                    "type": "string",
+                    "description": "手机号"
+                  },
+                  "verification": {
+                    "type": "string",
+                    "description": "验证码"
+                  }
+                },
+                "required": [
+                  "mobile",
+                  "verification"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "accessToken": {
+                    "type": "string",
+                    "description": "凭证"
+                  },
+                  "expiresIn": {
+                    "type": "number",
+                    "description": "有效时长（秒）"
+                  }
+                },
+                "required": [
+                  "accessToken",
+                  "expiresIn"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "/verifications": {
+        "post": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "新增验证码",
+          "description": "",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "root",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "channelName": {
+                    "type": "integer",
+                    "description": "渠道名。10:短信,20:邮箱"
+                  },
+                  "channelValue": {
+                    "type": "string",
+                    "description": "手机号"
+                  }
+                },
+                "required": [
+                  "channelName",
+                  "channelValue"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      },
+      "/regions?_as_tree": {
+        "get": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "获取行政区域（树形）",
+          "description": "",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "id"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "编码"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "名称"
+                  },
+                  "postfix": {
+                    "type": "string",
+                    "description": "名称后缀"
+                  },
+                  "shortname": {
+                    "type": "string",
+                    "description": "简称"
+                  },
+                  "fullname": {
+                    "type": "string",
+                    "description": "全称"
+                  },
+                  "hierarchy": {
+                    "type": "string",
+                    "description": "层级。1:国, 2:省, 3:市, 4:县, 5:镇, 6:村"
+                  },
+                  "rank": {
+                    "type": "integer",
+                    "description": "排序"
+                  },
+                  "status": {
+                    "type": "integer",
+                    "description": "状态0:禁用,1.正常"
+                  },
+                  "parent": {
+                    "type": "string",
+                    "description": "父级id"
+                  },
+                  "children": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {},
+                      "description": "与root属性一致"
+                    },
+                    "description": "子节点"
+                  }
+                },
+                "required": [
+                  "id",
+                  "code",
+                  "name",
+                  "postfix",
+                  "shortname",
+                  "fullname",
+                  "hierarchy",
+                  "rank",
+                  "status",
+                  "parent",
+                  "children"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "/profiles": {
+        "post": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "新增我的信息",
+          "description": "",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "root",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "badies": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "birthday": {
+                          "type": "string",
+                          "description": "生日"
+                        }
+                      },
+                      "description": "宝宝",
+                      "required": [
+                        "birthday"
+                      ]
+                    },
+                    "description": "宝宝列表"
+                  },
+                  "addresses": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "contactsName": {
+                          "type": "string",
+                          "description": "收货人姓名"
+                        },
+                        "contactsPhone": {
+                          "type": "string",
+                          "description": "收货手机号"
+                        },
+                        "province": {
+                          "type": "string",
+                          "description": "省份编码"
+                        },
+                        "city": {
+                          "type": "string",
+                          "description": "城市编码"
+                        },
+                        "county": {
+                          "type": "string",
+                          "description": "区县编码"
+                        },
+                        "town": {
+                          "type": "string",
+                          "description": "街镇编码"
+                        },
+                        "tail": {
+                          "type": "string",
+                          "description": "详细地址"
+                        },
+                        "zipcode": {
+                          "type": "string",
+                          "description": "邮编"
+                        }
+                      },
+                      "description": "地址"
+                    },
+                    "description": "地址列表"
+                  }
+                },
+                "required": [
+                  "contactsName",
+                  "contactsPhone",
+                  "province",
+                  "city",
+                  "county",
+                  "town",
+                  "tail",
+                  "badies",
+                  "addresses"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      },
+      "/addresses": {
+        "get": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "获取我的地址",
+          "description": "",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "root",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "birthday": {
+                    "type": "string",
+                    "description": "宝宝出生日期"
+                  },
+                  "contactsName": {
+                    "type": "string",
+                    "description": "收货人姓名"
+                  },
+                  "contactsPhone": {
+                    "type": "string",
+                    "description": "收货手机号"
+                  },
+                  "province": {
+                    "type": "string",
+                    "description": "省份编码"
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "城市编码"
+                  },
+                  "country": {
+                    "type": "string",
+                    "description": "区县编码"
+                  },
+                  "town": {
+                    "type": "string",
+                    "description": "街镇编码"
+                  },
+                  "tail": {
+                    "type": "string",
+                    "description": "详细地址"
+                  },
+                  "zipcode": {
+                    "type": "string",
+                    "description": "邮编"
+                  }
+                },
+                "required": [
+                  "birthday",
+                  "contactsName",
+                  "contactsPhone",
+                  "province",
+                  "city",
+                  "country",
+                  "town",
+                  "tail"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "主键"
+                    },
+                    "contactsName": {
+                      "type": "string",
+                      "description": "收货人姓名"
+                    },
+                    "contactsPhone": {
+                      "type": "string",
+                      "description": "收货手机号"
+                    },
+                    "province": {
+                      "type": "string",
+                      "description": "省份编码"
+                    },
+                    "provinceName": {
+                      "type": "string",
+                      "description": "省份名称"
+                    },
+                    "city": {
+                      "type": "string",
+                      "description": "城市编码"
+                    },
+                    "cityName": {
+                      "type": "string",
+                      "description": "城市名称"
+                    },
+                    "county": {
+                      "type": "string",
+                      "description": "区县编码"
+                    },
+                    "countyName": {
+                      "type": "string",
+                      "description": "区县名称"
+                    },
+                    "town": {
+                      "type": "string",
+                      "description": "街镇编码"
+                    },
+                    "townName": {
+                      "type": "string",
+                      "description": "街镇名称"
+                    },
+                    "tail": {
+                      "type": "string",
+                      "description": "详细地址"
+                    },
+                    "zipcode": {
+                      "type": "string",
+                      "description": "邮编"
+                    }
+                  },
+                  "description": "地址",
+                  "required": [
+                    "id"
+                  ]
+                },
+                "description": "地址列表"
+              }
+            }
+          }
+        }
+      },
+      "/cards/{card-code}/states": {
+        "post": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "新增卡片状态？",
+          "description": "用于绑定卡片",
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "parameters": [
+            {
+              "name": "card-code",
+              "in": "path",
+              "description": "卡片编号",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      },
+      "/cards": {
+        "get": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "获取我的卡片",
+          "description": "",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "主键"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "编号"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "名称"
+                    },
+                    "denomination": {
+                      "type": "string",
+                      "description": "面值"
+                    },
+                    "expireInDays": {
+                      "type": "string",
+                      "description": "有效时长（天）"
+                    },
+                    "cover": {
+                      "type": "string",
+                      "description": "封面图片路径"
+                    },
+                    "category": {
+                      "type": "integer",
+                      "description": "类型。10:季卡, 20:半年卡, 30:年卡"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "状态。10:待审核,20:已通过"
+                    },
+                    "account": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "主键"
+                        },
+                        "code": {
+                          "type": "string",
+                          "description": "编号"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "名称"
+                        },
+                        "balance": {
+                          "type": "integer",
+                          "description": "余额"
+                        },
+                        "activationDate": {
+                          "type": "string",
+                          "description": "激活日期"
+                        },
+                        "expirationDate": {
+                          "type": "string",
+                          "description": "截止日期"
+                        },
+                        "remainDays": {
+                          "type": "integer",
+                          "description": "剩余天数"
+                        },
+                        "status": {
+                          "type": "integer",
+                          "description": "状态"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "code",
+                        "cover",
+                        "denomination",
+                        "expireInDays",
+                        "name",
+                        "status",
+                        "balance",
+                        "activationDate",
+                        "expirationDate",
+                        "remainDays"
+                      ],
+                      "description": "账户"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "name",
+                    "remainDays",
+                    "balance",
+                    "activationDate",
+                    "expirationDate",
+                    "id",
+                    "status",
+                    "name",
+                    "category",
+                    "status",
+                    "denomination",
+                    "expireInDays",
+                    "cover"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "/products": {
+        "get": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "获取商品列表（根据卡种主键）",
+          "description": "",
+          "parameters": [
+            {
+              "name": "cardId",
+              "in": "query",
+              "required": true,
+              "description": "卡种主键",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "主键"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "编码"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "名称"
+                    },
+                    "category": {
+                      "type": "string",
+                      "description": "类目"
+                    },
+                    "photos": {
+                      "type": "string",
+                      "description": "图片"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "description": "状态"
+                    },
+                    "skus": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "主键"
+                          },
+                          "code": {
+                            "type": "string",
+                            "description": "编码"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "名称"
+                          },
+                          "price": {
+                            "type": "number",
+                            "description": "价格"
+                          },
+                          "quantity": {
+                            "type": "integer",
+                            "description": "库存"
+                          },
+                          "photos": {
+                            "type": "string",
+                            "description": "图片"
+                          },
+                          "status": {
+                            "type": "integer",
+                            "description": "状态"
+                          },
+                          "properties": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "description": "主键"
+                                },
+                                "k": {
+                                  "type": "string",
+                                  "description": "键。milk_weight: 重量, milk_stage: 段位"
+                                },
+                                "v": {
+                                  "type": "string",
+                                  "description": "值"
+                                }
+                              },
+                              "required": [
+                                "k",
+                                "v",
+                                "id"
+                              ],
+                              "description": "属性"
+                            },
+                            "description": "属性列表"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "code",
+                          "name",
+                          "price",
+                          "quantity",
+                          "photos",
+                          "properties",
+                          "status"
+                        ],
+                        "description": "SKU"
+                      },
+                      "description": "SKU列表"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "code",
+                    "name",
+                    "skus",
+                    "photos",
+                    "category",
+                    "status"
+                  ],
+                  "description": "商品"
+                }
+              }
+            }
+          }
+        }
+      },
+      "/orders?_as_page": {
+        "get": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "获取用户订单列表（分页）",
+          "description": "",
+          "consumes": [
+            "multipart/form-data"
+          ],
+          "parameters": [
+            {
+              "name": "number",
+              "in": "query",
+              "required": true,
+              "description": "当前页(默认0)",
+              "type": "string"
+            },
+            {
+              "name": "size",
+              "in": "query",
+              "required": true,
+              "description": "每页数量(默认10)",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "size": {
+                    "type": "integer",
+                    "description": "每页数量"
+                  },
+                  "first": {
+                    "type": "integer",
+                    "description": "是否首页"
+                  },
+                  "last": {
+                    "type": "string",
+                    "description": "是否末页"
+                  },
+                  "number": {
+                    "type": "string",
+                    "description": "当前页"
+                  },
+                  "numberOfElements": {
+                    "type": "string",
+                    "description": "当前页的记录条数"
+                  },
+                  "totalPages": {
+                    "type": "string",
+                    "description": "总页数"
+                  },
+                  "totalElements": {
+                    "type": "string",
+                    "description": "总数量"
+                  },
+                  "content": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "订单主键"
+                      },
+                      "username": {
+                        "type": "string",
+                        "description": "用户标识"
+                      },
+                      "accountId": {
+                        "type": "string",
+                        "description": "奶卡编号"
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "订单编号"
+                      },
+                      "bookTime": {
+                        "type": "string",
+                        "description": "下单时间"
+                      },
+                      "payTime": {
+                        "type": "string",
+                        "description": "支付时间"
+                      },
+                      "quantity": {
+                        "type": "integer",
+                        "description": "商品总数"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "状态。10:等待发货,20:部分发货,21:全部发货"
+                      },
+                      "skuPhotos": {
+                        "type": "string",
+                        "description": "sku图片"
+                      },
+                      "k": {
+                        "type": "string",
+                        "description": "键"
+                      },
+                      "v": {
+                        "type": "string",
+                        "description": "值"
+                      },
+                      "provinceName": {
+                        "type": "string",
+                        "description": "省份名称"
+                      },
+                      "cityName": {
+                        "type": "string",
+                        "description": "地市名称"
+                      },
+                      "countyName": {
+                        "type": "string",
+                        "description": "区县名称"
+                      },
+                      "townName": {
+                        "type": "string",
+                        "description": "街镇名称"
+                      },
+                      "tail": {
+                        "type": "string",
+                        "description": "尾巴地址"
+                      },
+                      "zipcode": {
+                        "type": "string",
+                        "description": "邮编"
+                      },
+                      "deliveryCompanyName": {
+                        "type": "string",
+                        "description": "快递公司名称"
+                      },
+                      "deliveryCode": {
+                        "type": "string",
+                        "description": "发货单号"
+                      },
+                      "deliveryTime": {
+                        "type": "string",
+                        "description": "发货时间"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "username",
+                      "accountId",
+                      "code",
+                      "payTime",
+                      "bookTime",
+                      "quantity",
+                      "status",
+                      "skuPhotos",
+                      "k",
+                      "v",
+                      "provinceName",
+                      "cityName",
+                      "tail",
+                      "townName",
+                      "countyName",
+                      "deliveryCode",
+                      "deliveryCompanyName",
+                      "zipcode",
+                      "deliveryTime"
+                    ]
+                  }
+                },
+                "required": [
+                  "size",
+                  "first",
+                  "content",
+                  "numberOfElements",
+                  "number",
+                  "last",
+                  "totalPages",
+                  "totalElements"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "/orders": {
+        "post": {
+          "tags": [
+            "前台"
+          ],
+          "summary": "创建一个订单",
+          "description": "",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "root",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "accountCode": {
+                    "type": "string",
+                    "description": "账户编号"
+                  },
+                  "addressId": {
+                    "type": "string",
+                    "description": "地址主键"
+                  },
+                  "skus": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "code": {
+                          "type": "string",
+                          "description": "编码"
+                        },
+                        "quantity": {
+                          "type": "string",
+                          "description": "数量"
+                        }
+                      },
+                      "description": "SKU",
+                      "required": [
+                        "code",
+                        "quantity"
+                      ]
+                    },
+                    "description": "SKU列表"
+                  },
+                  "verification": {
+                    "type": "string",
+                    "description": "验证码"
+                  }
+                },
+                "required": [
+                  "accountCode",
+                  "addressId",
+                  "skus",
+                  "verification"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      },
+      "/admin/cards/{card-id}/states/{}": {
+        "post": {
+          "tags": [
+            "后台"
+          ],
+          "summary": "审核卡片",
+          "description": "",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "card-id",
+              "in": "path",
+              "description": "",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "root",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "description": "状态。20:已通过,21:已拒绝,30:已退卡"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      },
+      "/admin/cards?_as_page": {
+        "get": {
+          "tags": [
+            "后台"
+          ],
+          "summary": "获取卡片（分页）",
+          "description": "",
+          "parameters": [
+            {
+              "name": "number",
+              "in": "query",
+              "required": true,
+              "description": "当前页码(默认0)",
+              "type": "string"
+            },
+            {
+              "name": "size",
+              "in": "query",
+              "required": true,
+              "description": "每页数量(默认10)",
+              "type": "string"
+            },
+            {
+              "name": "status",
+              "in": "query",
+              "required": true,
+              "description": "状态",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "size": {
+                    "type": "string",
+                    "description": "每页数量"
+                  },
+                  "first": {
+                    "type": "string",
+                    "description": "是否首页"
+                  },
+                  "last": {
+                    "type": "string",
+                    "description": "是否末页"
+                  },
+                  "number": {
+                    "type": "string",
+                    "description": "当前页"
+                  },
+                  "numberOfElements": {
+                    "type": "string",
+                    "description": "当前页的记录条数"
+                  },
+                  "totalPages": {
+                    "type": "string",
+                    "description": "总页数"
+                  },
+                  "totalElements": {
+                    "type": "string",
+                    "description": "总数量"
+                  },
+                  "content": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "主键"
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "编号"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "名称"
+                      },
+                      "denomination": {
+                        "type": "string",
+                        "description": "面值"
+                      },
+                      "cover": {
+                        "type": "string",
+                        "description": "封面图片路径"
+                      },
+                      "category": {
+                        "type": "integer",
+                        "description": "类型。10:季卡, 20:半年卡, 30:年卡"
+                      },
+                      "status": {
+                        "type": "integer",
+                        "description": "状态。10:待审核,20:已通过,21:已拒绝,30:已退卡"
+                      },
+                      "statusTime": {
+                        "type": "string",
+                        "description": "状态时间"
+                      },
+                      "applyTime": {
+                        "type": "string",
+                        "description": "绑定时间。取创建时间"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "code",
+                      "category",
+                      "creator",
+                      "mobile",
+                      "provinceName",
+                      "cityName",
+                      "county",
+                      "town",
+                      "tail",
+                      "zipcode",
+                      "creationTime",
+                      "activationDate",
+                      "status",
+                      "name",
+                      "applyTime",
+                      "statusTime"
+                    ]
+                  },
+                  "sort": {
+                    "type": "object",
+                    "properties": {},
+                    "description": "排序信息"
+                  }
+                },
+                "required": [
+                  "size",
+                  "first",
+                  "last",
+                  "number",
+                  "numberOfElements",
+                  "totalPages",
+                  "totalElements",
+                  "content",
+                  "sort"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "/admin/orders?_as_page": {
+        "get": {
+          "tags": [
+            "后台"
+          ],
+          "summary": "获取订单列表（分页）",
+          "description": "",
+          "parameters": [
+            {
+              "name": "number",
+              "in": "query",
+              "required": true,
+              "description": "当前页(默认0)",
+              "type": "string"
+            },
+            {
+              "name": "size",
+              "in": "query",
+              "required": true,
+              "description": "每页数量(默认10)",
+              "type": "string"
+            },
+            {
+              "name": "status",
+              "in": "query",
+              "required": true,
+              "description": "状态",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "size": {
+                    "type": "string",
+                    "description": "每页数量"
+                  },
+                  "first": {
+                    "type": "string",
+                    "description": "是否首页"
+                  },
+                  "last": {
+                    "type": "string",
+                    "description": "是否末页"
+                  },
+                  "number": {
+                    "type": "string",
+                    "description": "当前页"
+                  },
+                  "numberOfElements": {
+                    "type": "string",
+                    "description": "当前页的记录条数"
+                  },
+                  "totalPages": {
+                    "type": "string",
+                    "description": "总页数"
+                  },
+                  "totalElements": {
+                    "type": "string",
+                    "description": "总数量"
+                  },
+                  "content": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "订单号"
+                      },
+                      "productName": {
+                        "type": "string",
+                        "description": "商品名称"
+                      },
+                      "skuAttr": {
+                        "type": "integer",
+                        "description": "段数"
+                      },
+                      "num": {
+                        "type": "string",
+                        "description": "数量"
+                      },
+                      "contactsName": {
+                        "type": "string",
+                        "description": "收货人姓名"
+                      },
+                      "contactsPhone": {
+                        "type": "string",
+                        "description": "手机号"
+                      },
+                      "provinceName": {
+                        "type": "string",
+                        "description": "省份名称"
+                      },
+                      "cityName": {
+                        "type": "string",
+                        "description": "城市名称"
+                      },
+                      "county": {
+                        "type": "string",
+                        "description": "区县名称"
+                      },
+                      "town": {
+                        "type": "string",
+                        "description": "街镇名称"
+                      },
+                      "tail": {
+                        "type": "string",
+                        "description": "详细地址"
+                      },
+                      "zipcode": {
+                        "type": "string",
+                        "description": "邮编"
+                      },
+                      "bookTime": {
+                        "type": "string",
+                        "description": "下单时间"
+                      },
+                      "expressTime": {
+                        "type": "string",
+                        "description": "发货时间"
+                      },
+                      "expressCompanyName": {
+                        "type": "string",
+                        "description": "快递公司名称"
+                      },
+                      "expressTicket": {
+                        "type": "string",
+                        "description": "快递单号"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "状态"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "productName",
+                      "skuAttr",
+                      "num",
+                      "contactsPhone",
+                      "provinceName",
+                      "cityName",
+                      "county",
+                      "town",
+                      "tail",
+                      "zipcode",
+                      "bookTime",
+                      "expressTime",
+                      "status",
+                      "contactsName",
+                      "expressCompanyName",
+                      "expressTicket"
+                    ]
+                  },
+                  "sort": {
+                    "type": "string",
+                    "description": "排序信息"
+                  }
+                },
+                "required": [
+                  "size",
+                  "first",
+                  "last",
+                  "number",
+                  "numberOfElements",
+                  "totalPages",
+                  "totalElements",
+                  "content",
+                  "sort"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "/admin/export-card": {
+        "get": {
+          "tags": [
+            "后台"
+          ],
+          "summary": "导出卡片审核",
+          "description": "",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      },
+      "/admin/export-order": {
+        "get": {
+          "tags": [
+            "后台"
+          ],
+          "summary": "导出发货订单",
+          "description": "",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      },
+      "/admin/orders/{order-id}/send-out": {
+        "post": {
+          "tags": [
+            "后台"
+          ],
+          "summary": "发货",
+          "description": "",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "order-id",
+              "in": "path",
+              "description": "订单号",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "root",
+              "in": "body",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {
+                  "expressCompanyCode": {
+                    "type": "string",
+                    "description": "快递公司编码"
+                  },
+                  "expressCompanyName": {
+                    "type": "string",
+                    "description": "快递公司名称"
+                  },
+                  "expressTicket": {
+                    "type": "string",
+                    "description": "快递单号"
+                  }
+                },
+                "required": [
+                  "expressCompanyCode",
+                  "expressCompanyName",
+                  "expressTicket"
+                ]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "object",
+                "title": "empty object",
+                "properties": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }

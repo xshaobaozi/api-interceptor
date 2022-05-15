@@ -1,18 +1,26 @@
 <template>
-  <button @click="handleClick">button</button>
+  <el-row>
+    <el-col :span="24">
+      <el-tabs v-model="tabValue">
+        <el-tab-pane label="模块管理" name="module">
+          <ModuleManager></ModuleManager>
+        </el-tab-pane>
+        <el-tab-pane label="请求管理" name="api">
+          <EditApi></EditApi>
+        </el-tab-pane>
+      </el-tabs>
+    </el-col>
+  </el-row>
 </template>
 
 <script setup>
-import chromeWapper, { sendMessage } from "@/helper/chrome";
-const handleClick = () => {
-  console.log("handleClick");
-  sendMessage(
-    { a: 1, b: 2 },
-    function () {
-      console.log("调用成功 button 1");
-    }
-  );
-};
+import ModuleManager from '@/views/module-manager/index.vue'
+import EditApi from '@/views/edit-api/index.vue'
+import { ref } from 'vue'
+import { useApiStore } from '@/store';
+const apiStore = useApiStore()
+apiStore.init()
+const tabValue = ref('module')
 </script>
 <style lang="scss">
-</style>e
+</style>

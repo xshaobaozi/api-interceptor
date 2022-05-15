@@ -1,0 +1,141 @@
+$sizes: (
+  5: 5px,
+  10: 10px,
+  15: 15px,
+  20: 20px,
+  25: 25px,
+  30: 30px,
+  35: 35px,
+  40: 40px,
+  45: 45px,
+  50: 50px,
+);
+
+$fonts: (
+  12: 12px,
+  14: 14px,
+  16: 16px,
+);
+
+$colors: (
+  primary: #409eff,
+  success: #67c23a,
+  warning: #e6a23c,
+  danger: #f56c6c,
+  error: #f56c6c,
+  info: #909399,
+);
+body,
+html {
+  padding: 0;
+  margin: 0;
+}
+#app {
+  padding: 16px;
+}
+div,
+p,
+span,
+ul,
+li,
+img,
+section,
+header,
+footer {
+  box-sizing: border-box;
+}
+
+@each $key, $value in $colors {
+  .#{$key}-color {
+    color: $value;
+  }
+  .#{$key}-btn {
+    color: $value;
+    cursor: pointer;
+    &:hover {
+      // color: lighten($value, 8%);
+    }
+  }
+  .#{$key}-icon {
+    &:before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: $value;
+      margin-right: 5px;
+    }
+  }
+}
+
+@each $key, $value in $fonts {
+  .fz#{$key} {
+    font-size: $value;
+  }
+}
+
+@each $key, $value in $sizes {
+  //padding
+  .p#{$key} {
+    padding: $value;
+  }
+  .pl#{$key} {
+    padding-left: $value;
+  }
+  .pr#{$key} {
+    padding-right: $value;
+  }
+  .pb#{$key} {
+    padding-bottom: $value;
+  }
+  .pt#{$key} {
+    padding-top: $value;
+  }
+  .ptb#{$key} {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+  .plr#{$key} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+  // margin
+  .m#{$key} {
+    margin: $value;
+  }
+  .ml#{$key} {
+    margin-left: $value;
+  }
+  .mr#{$key} {
+    margin-right: $value;
+  }
+  .mb#{$key} {
+    margin-bottom: $value;
+  }
+  .mt#{$key} {
+    margin-top: $value;
+  }
+  .mtb#{$key} {
+    margin-top: $value;
+    margin-bottom: $value;
+  }
+  .mlr#{$key} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  background-color: #d5dae0;
+}
+/*定义滚动条轨道：内阴影+圆角*/
+::-webkit-scrollbar-track {
+  background-color: #d5dae0;
+}
+/*定义滑块：内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #409eff;
+}
