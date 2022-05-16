@@ -93,6 +93,11 @@ export default defineStore(ID, {
         : form.schema;
       this.saveLocal();
     },
+    editAll(apis) {
+      this.apis = apis
+      this.saveLocal();
+
+    },
     // TODO修改数据逻辑有问题
     editItem(formValue) {
       const { apisIdx } = formValue;

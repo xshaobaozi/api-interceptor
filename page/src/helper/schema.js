@@ -4,6 +4,7 @@ const clone = require('clone');
 export const fromType = {
   Kepler: 'Kepler',
   Owner: 'Owner',
+  All: 'All',
 };
 export const toObj = (schema) => {
   try {
@@ -28,16 +29,18 @@ export const toObj = (schema) => {
 //   },
 //   paths: OwernSchemaPaths[]
 // }
-export const vaildSchemaOwner = (schema) => {
+export const vaildSchemaOwner = (schema, isAll = false) => {
   const schemaWapper = toObj(schema);
   if (schemaWapper.message) {
     return new Error(schemaWapper.message);
   }
-  if (!schemaWapper.info) {
-    return new Error('缺少schema.info');
-  }
-  if (!schemaWapper.info.title) {
-    return new Error('缺少schema.info.title');
+  if (!isAll) {
+    if (!schemaWapper.info) {
+      return new Error('缺少schema.info');
+    }
+    if (!schemaWapper.info.title) {
+      return new Error('缺少schema.info.title');
+    }
   }
   if (!schemaWapper.paths) {
     return new Error('缺少schema.paths');
@@ -62,9 +65,28 @@ export const vaildSchemaOwner = (schema) => {
       return new Error('缺少array[i].response');
     }
   }
+  return true;
 };
+export const vaildSchemaAll = (schema) => {
+  const schemaWapper = toObj(schema);
+  if (schemaWapper.message) {
+    return new Error('');
+  }
+  if (!schemaWapper.schema) {
+    return new Error('缺少schema.schema');
+  }
+  if (!Array.isArray(schemaWapper.schema)) {
+    return new Error('schema.schema 必须为array');
+  }
 
-export const vaildSchemaKepler = (schema) => {
+  for (let item in schemaWapper.schema) {
+    const flag = vaildSchemaOwner(schemaWapper.schema[item].schema);
+    if (flag !== true) {
+      return flag;
+    }
+  }
+};
+export const vaildSchemaKepler = (schema, isAll = false) => {
   const schemaWapper = toObj(schema);
   if (schemaWapper.message) {
     return new Error(schemaWapper.message);

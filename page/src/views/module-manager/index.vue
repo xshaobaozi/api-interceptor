@@ -2,6 +2,7 @@
   <el-row class="p10">
     <el-col :span="24" class="mb10">
       <el-button type="primary" @click="handleCreate">创建</el-button>
+      <el-button type="primary" @click="handleAllImport">全量导入</el-button>
     </el-col>
     <el-col :span="24">
       <el-table :data="apiStore.apis">
@@ -28,7 +29,7 @@
     </el-col>
     <el-dialog
       v-model="dialogConfig.isShow"
-      :title="dialogConfig.isEdit ? '编辑' : '创建'"
+      :title="dialogConfig.isEdit === Mode.Edit ? '编辑' : '创建'"
       width="80%"
     >
       <section class="p10">
@@ -39,10 +40,18 @@
           :rules="rules"
           ref="$form"
         >
-          <el-form-item label="模块名" prop="name">
+          <el-form-item
+            label="模块名"
+            prop="name"
+            v-if="dialogConfig.isEdit !== Mode.All"
+          >
             <el-input v-model="form.name" />
           </el-form-item>
-          <el-form-item label="来源" prop="from">
+          <el-form-item
+            label="来源"
+            prop="from"
+            v-if="dialogConfig.isEdit !== Mode.All"
+          >
             <el-radio-group
               v-model="form.from"
               size="small"
@@ -52,7 +61,11 @@
               <el-radio-button :label="fromType.Kepler">Kepler</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="合并" prop="merge" v-if="dialogConfig.isEdit">
+          <el-form-item
+            label="合并"
+            prop="merge"
+            v-if="dialogConfig.isEdit === Mode.Edit"
+          >
             <el-radio-group v-model="form.merge" size="small">
               <el-radio-button :label="true">合并</el-radio-button>
               <el-radio-button :label="false">覆盖</el-radio-button>
@@ -78,13 +91,14 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance } from 'vue';
+import { ref, reactive, getCurrentInstance, computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useApiStore } from '@/store';
 import {
   vaildSchemaOwner,
   vaildSchemaKepler,
   kepler2OwernData,
+  vaildSchemaAll,
   fromType,
 } from '@/helper/schema';
 import JsonEdit from '@/components/jsonEdit.vue';
@@ -97,21 +111,39 @@ const form = reactive({
   merge: false,
   id: '',
 });
-const rules = reactive({
-  name: [{ required: true, message: '请输入模块名', trigger: 'change' }],
-  from: [{ required: true, message: '请选择来源', trigger: 'change' }],
-  schema: [
+const rules = computed(() => {
+  const name = [{ required: true, message: '请输入模块名', trigger: 'change' }];
+  const from = [{ required: true, message: '请选择来源', trigger: 'change' }];
+  const schema = [
     { required: true, message: '请输入数据源', trigger: 'change' },
     {
       validator: (rule, value, callback) => {
         if (form.from === fromType.Kepler) {
           return callback(vaildSchemaKepler(value));
         }
+        if (form.from === fromType.All) {
+          return callback(vaildSchemaAll(value));
+        }
         return callback(vaildSchemaOwner(value));
       },
     },
-  ],
+  ];
+  if (form.from === fromType.All) {
+    return {
+      schema,
+    };
+  }
+  return {
+    name,
+    from,
+    schema,
+  };
 });
+const Mode = {
+  Edit: 'Edit',
+  Create: 'Create',
+  All: 'All',
+};
 const dialogConfig = reactive({
   isShow: false,
   isEdit: false,
@@ -126,14 +158,28 @@ const handleEdit = (row) => {
   form.from = fromType.Owner;
   form.merge = false;
   form.schema = row.schema;
-  dialogConfig.isEdit = true;
+  dialogConfig.isEdit = Mode.Edit;
   dialogConfig.isShow = true;
+};
+const handleAllImport = () => {
+  dialogConfig.isShow = true;
+  dialogConfig.isEdit = Mode.All;
+  form.from = fromType.All;
+  form.name = '';
+  form.schema = {
+    schema: apiStore.apis,
+  };
+  form.merge = false;
+  form.id = '';
+  setTimeout(() => {
+    handleFromChange();
+  }, 0);
 };
 const handleCreate = () => {
   dialogConfig.isShow = true;
-  dialogConfig.isEdit = false;
+  dialogConfig.isEdit = Mode.Create;
   form.name = '';
-  form.schema = '';
+  form.schema = {};
   form.merge = false;
   form.id = '';
   form.from = fromType.Owner;
@@ -154,14 +200,14 @@ const handleDelete = (row) => {
     .catch(() => {});
 };
 const handleFromChange = (val) => {
-  console.log(instance.refs['$form'].validateField('schema'));
-}
+  instance.refs['$form'].validateField('schema');
+};
 const handleSave = () => {
   instance.refs['$form'].validate(async (valid, fields) => {
     if (!valid) {
       return;
     }
-    if (dialogConfig.isEdit) {
+    if (dialogConfig.isEdit === Mode.Edit) {
       apiStore.edit({
         ...form,
         schema:
@@ -169,6 +215,11 @@ const handleSave = () => {
             ? form.schema
             : kepler2OwernData(form.schema),
       });
+      dialogConfig.isShow = false;
+      return;
+    }
+    if (dialogConfig.isEdit === Mode.All) {
+      apiStore.editAll(form.schema.schema);
       dialogConfig.isShow = false;
       return;
     }
