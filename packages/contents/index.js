@@ -1,9 +1,9 @@
 import { typeEvent } from "./../../page/src/helper/event";
 const connect = chrome.runtime.connect();
-
+const APPKey = 'api-intercepror-data'
 connect.onMessage.addListener((res) => {
   console.log("content 长链接 ", res);
-
+  window.localStorage.setItem(APPKey, JSON.stringify(res))
   // console.log("send");
   setTimeout(() => {
     console.log(222222);
