@@ -1,6 +1,8 @@
-import { typeEvent } from './event';
+import { typeEvent, preKey } from './event';
 import { parse, stringify } from '@/store/modules/apis';
-const preKey = 'api_interceptor__';
+// 用于插件的数据储存
+// 用于传递ajax的数据储存
+export const pageKey = 'api_interceptor__session__'
 const isPro = process.env.NODE_ENV === 'production';
 const chromeMock = {
   runtime: {
@@ -21,6 +23,7 @@ const chromeMock = {
         keys.forEach((key) => {
           source[key] = parse(window.localStorage.getItem(`${preKey}${key}`));
         });
+        console.log('source', source)
         callback(source);
       },
       set(obj) {

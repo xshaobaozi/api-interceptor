@@ -3,19 +3,37 @@
     <el-col :span="24" class="mb10">
       <el-button type="primary" @click="handleCreate">创建</el-button>
       <el-button type="primary" @click="handleAllImport">全量导入</el-button>
+      <el-button type="primary" @click="handleopenMock">{{apiStore.openMock?'关闭Mock':'打开Mock'}}</el-button>
     </el-col>
     <el-col :span="24">
-      <el-table :data="apiStore.apis">
-        <el-table-column prop="name" label="模块名" width="150" />
+      <el-table :data="apiStore.apis" class="modules_manger_table">
+        <el-table-column prop="name" label="模块名" width="100" />
         <el-table-column prop="create" label="创建时间" width="150" />
         <el-table-column prop="update" label="更新时间" width="150" />
-        <el-table-column label="操作">
+        <el-table-column label="启用" prop="disabled" width="60">
+          <template #default="scope">
+            {{ scope.row.disabled ? '禁用' : '启用' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="280px">
           <template #default="scope">
             <el-button
               size="small"
               type="primary"
               @click="handleEdit(scope.row)"
               >编辑</el-button
+            >
+            <el-button
+              size="small"
+              type="primary"
+              @click="handleChangeDisabled(scope.row, false)"
+              >启用</el-button
+            >
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleChangeDisabled(scope.row, true)"
+              >禁用</el-button
             >
             <el-button
               size="small"
@@ -148,7 +166,15 @@ const dialogConfig = reactive({
   isShow: false,
   isEdit: false,
 });
-
+const handleopenMock = () => {
+  apiStore.changeGlobalMock(!apiStore.openMock)
+}
+const handleChangeDisabled = (item, disabled) => {
+  apiStore.edit({
+    ...item,
+    disabled: disabled,
+  });
+};
 const handleSchemaChange = () => {
   instance.refs['$form'].validate(async (valid, fields) => {});
 };
@@ -247,4 +273,10 @@ const handleReset = () => {
 };
 </script>
 <style lang="scss">
+.modules_manger_table{
+  .cell{
+    font-size: 12px;
+
+  }
+}
 </style>

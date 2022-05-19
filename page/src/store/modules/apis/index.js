@@ -3,6 +3,7 @@ import { ElMessage } from 'element-plus';
 import { setStore, getStore } from './../../../helper/chrome';
 import { schemaMerge } from '@/helper/schema';
 import { sendMessage } from '@/helper/chrome';
+import { actionType } from '@/helper/event';
 import dayjs from 'dayjs';
 
 export const parse = (obj) => {
@@ -16,7 +17,7 @@ export const stringify = (obj) => {
   return JSON.stringify(obj);
 };
 export const wapperKey = 'interceptor';
-const processID = () => {
+export const processID = () => {
   const uuid = 'xxxxxxxx-xxxx-xxxx-yxxx-xxxxxxxxxxxx'.replace(
     /[xy]/g,
     function (c) {
@@ -33,11 +34,16 @@ export default defineStore(ID, {
   state: () => {
     return {
       apis: [],
+      openMock: false,
     };
   },
   actions: {
+    changeGlobalMock(flag) {
+      this.openMock = flag;
+      this.saveLocal();
+    },
     init() {
-      const keys = ['apis'];
+      const keys = ['apis', 'openMock'];
       console.log(`初始化state:`, keys);
       getStore(keys, (result) => {
         console.log('getStore', result);
@@ -50,11 +56,18 @@ export default defineStore(ID, {
       });
     },
     saveLocal() {
-      console.log('保存到local ', this.apis);
-      setStore({ apis: this.apis });
-      sendMessage({ apis: this.apis }, (...args) => {
-        console.log('sendMessage', ...args);
-      });
+      console.log('保存到local ', this.apis, this.openMock);
+      setStore({ apis: this.apis, openMock: this.openMock });
+      sendMessage(
+        {
+          apis: this.apis,
+          action: actionType.refresh,
+          openMock: this.openMock,
+        },
+        (...args) => {
+          console.log('sendMessage', ...args);
+        }
+      );
     },
     add(form) {
       const { name } = form;
@@ -90,6 +103,7 @@ export default defineStore(ID, {
         return;
       }
       target.name = form.name;
+      target.disabled = form.disabled;
       target.update = dayjs(new Date()).format(format);
       //合并数据
       target.schema = form.merge
@@ -108,14 +122,17 @@ export default defineStore(ID, {
       if (!target) {
         return;
       }
-      const { uri, method } = formValue;
+      console.log(target);
+      const { uri, method, id } = formValue;
       try {
         const paths = target['schema']['paths'];
-        const idx = paths.findIndex((item) => item.id === `${uri}-${method}`);
+        const idx = paths.findIndex((item) => item.id === id);
+        console.log(idx);
         if (idx === -1) {
-          return Error('找不到', uri, method);
+          throw Error('找不到', uri, method);
         }
         paths[idx] = formValue;
+        console.log('formValue', formValue);
         // Object.keys(formValue).forEach((key) => {
         //   result[key] = formValue[key];
         // });

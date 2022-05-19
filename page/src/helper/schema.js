@@ -1,5 +1,6 @@
 import { wapperKey } from '@/store/modules/apis';
 import { parse } from '@/store/modules/apis';
+import { processID } from '@/store/modules/apis';
 const clone = require('clone');
 export const fromType = {
   Kepler: 'Kepler',
@@ -147,7 +148,7 @@ export const kepler2OwernData = (schema) => {
         method,
         disabled: true,
         finish: false,
-        id: `${uri}-${method}`,
+        id: processID(),
         code: 200,
         // 不同状态码对应的response
         response: {},

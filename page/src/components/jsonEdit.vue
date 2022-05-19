@@ -17,15 +17,16 @@ const instance = getCurrentInstance();
 const jonedit = ref({});
 const props = defineProps({
   value: Object,
-  show: Boolean,
+  refresh: Boolean,
 });
 const emit = defineEmits(['update:value', 'change']);
 watch(
-  () => props.show,
+  () => props.refresh,
   () => {
     jonedit.value.set(parse(props.value));
   }
 );
+
 onMounted(() => {
   const dom = instance.refs['$jsonEdit'];
   jonedit.value = new JSONEditor(dom, {

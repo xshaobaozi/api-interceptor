@@ -32,7 +32,7 @@
     "https://*/"
   ],
   "web_accessible_resources": [
-    "pageScripts/main.js",
+    "mockScript.js",
     "iframe/index.html"
   ]
 }

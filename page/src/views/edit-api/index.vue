@@ -46,7 +46,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="返回" prop="response">
-          <JsonEdit v-model:value="currentForm.response"></JsonEdit>
+          <JsonEdit v-model:value="currentForm.response" :refresh="treeRefresh"></JsonEdit>
         </el-form-item>
         <el-form-item>
           <el-button size="small" type="primary" @click="handleSave"
@@ -71,6 +71,7 @@ const defaultProps = {
   children: 'children',
   label: 'label',
 };
+const treeRefresh = ref(false)
 const treeInfo = reactive({
   expandKey: [],
   checkKey: [],
@@ -108,10 +109,12 @@ const handleNodeClick = (info) => {
   const faterName = apiStore.apis[apisIdx].name;
   treeInfo.expandKey = [faterName, info.label];
   currentForm.value = { ...info.detail };
+  treeRefresh.value = !treeRefresh.value
 };
 const form = reactive({});
 const rules = reactive({});
 const handleSave = () => {
+  console.log(currentForm.value)
   apiStore.editItem(currentForm.value);
 };
 const handleDelete = () => {};

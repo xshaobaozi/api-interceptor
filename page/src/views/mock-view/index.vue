@@ -1,23 +1,31 @@
 <template>
   <el-button @click="handleSend">Axios Get请求</el-button>
   <el-button @click="handleSendXML">XMLHttpRequest Get请求</el-button>
-  <el-button @click="handleOpenMock">{{ isMock ? 'Open' : 'Close' }}</el-button>
+  <el-button @click="handleMockStatus" type="primary">{{
+    apiStore.openMock ? '开启Mock' : '关闭Mock'
+  }}</el-button>
 </template>
 
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
 import XMLMock from '../../helper/mock';
+import { useApiStore } from '@/store';
+const apiStore = useApiStore();
 const isMock = ref(false);
 const sourceXML = window.XMLHttpRequest;
 const handleOpenMock = () => {
-  isMock.value = !isMock.value;
-  if (isMock.value) {
-    window.XMLHttpRequest = XMLMock;
+  if (apiStore.openMock) {
+    window.XMLHttpRequest = sourceXML;
     return;
   }
-  window.XMLHttpRequest = sourceXML;
+  window.XMLHttpRequest = XMLMock;
 };
+const handleMockStatus = () => {
+  apiStore.changeGlobalMock(!apiStore.openMock);
+  handleOpenMock();
+};
+handleOpenMock();
 const url = 'https://restapi.amap.com/v3/place/text';
 const params = 'key=d575ee75cfb2dee118eac9d49927a9b3&keywords=金山软件园';
 const json = {
