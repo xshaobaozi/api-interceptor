@@ -131,7 +131,32 @@ export default defineStore(ID, {
       this.saveLocal();
     },
     editAll(apis) {
-      this.apis = apis;
+      this.apis = apis.map((item, $index) => {
+        return {
+          id: item.id ? item.id : processID(),
+          name: item.name,
+          disabled: item.disabled ? item.disabled : true,
+          create: item.create ? item.create : dayjs(new Date()).format(format),
+          update: item.update ? itemupdate : dayjs(new Date()).format(format),
+          schema: {
+            info: {
+              title: item.schema.info.title,
+            },
+            paths: item.schema.paths.map((inner, $innerIdx) => {
+              return {
+                apisIdx: $index,
+                id: inner.id ? inner.id : processID(),
+                uri: inner.uri,
+                desc: inner.desc,
+                methods: inner.methods ? inner.methods : 'get',
+                response: inner.response ? inner.response : {},
+                finish: inner.finish ? inner.finish : false,
+                disabled: inner.disabled ? inner.disabled : true,
+              };
+            }),
+          },
+        };
+      });
       this.saveLocal();
     },
     // TODO修改数据逻辑有问题
