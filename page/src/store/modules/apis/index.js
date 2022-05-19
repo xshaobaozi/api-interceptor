@@ -89,6 +89,7 @@ export default defineStore(ID, {
       }
       this.apis.push({
         id: processID(),
+        disabled: true,
         name: form.name,
         schema: form.schema,
         create: dayjs(new Date()).format(format),

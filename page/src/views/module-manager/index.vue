@@ -140,8 +140,9 @@ const apiStore = useApiStore();
 const instance = getCurrentInstance();
 const form = reactive({
   name: '',
-  from: fromType.Owner,
+  from: fromType.Kepler,
   schema: '',
+  disabled: true,
   merge: false,
   id: '',
 });
@@ -250,13 +251,20 @@ const handleCreate = () => {
   form.name = '';
   form.schema = {
     info: {
-      title: '',
+      title: '模块名字',
     },
-    paths: [],
+    paths: {
+      '/uri': {
+        get: {
+          summary: '1',
+        }
+      }
+    },
   };
   form.merge = false;
   form.id = '';
-  form.from = fromType.Owner;
+  form.from = fromType.Kepler;
+  instance.refs['$form'].resetFields()
 };
 const handleDelete = (row) => {
   ElMessageBox.confirm(`是否删除【${row.name}】`, '删除模块', {

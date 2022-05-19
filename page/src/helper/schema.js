@@ -139,12 +139,12 @@ export const kepler2OwernData = (schema) => {
   const children = [];
   Object.keys(paths).forEach((uri) => {
     const uriPath = paths[uri];
-    Object.keys(uriPath).forEach((method, $childId) => {
-      const result = uriPath[method];
+    Object.keys(uriPath).forEach((methods, $childId) => {
+      const result = uriPath[methods];
       children.push({
         desc: result.summary,
         uri,
-        method,
+        methods,
         disabled: true,
         finish: false,
         id: processID(),
