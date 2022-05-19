@@ -21,14 +21,14 @@ const chromeMock = {
         console.log('local get', keys);
         const source = {};
         keys.forEach((key) => {
-          source[key] = parse(window.localStorage.getItem(`${preKey}${key}`));
+          source[key] = parse(window.sessionStorage.getItem(`${preKey}${key}`));
         });
         console.log('source', source)
         callback(source);
       },
       set(obj) {
         Object.keys(obj).forEach((item) => {
-          window.localStorage.setItem(
+          window.sessionStorage.setItem(
             `${preKey}${item}`,
             stringify(obj[item])
           );

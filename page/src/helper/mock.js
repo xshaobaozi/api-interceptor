@@ -1,9 +1,6 @@
 import { preKey, parse, typeEvent } from './event';
 const sourceXML = window.XMLHttpRequest;
 
-// window.addEventListener('message', (event) => {
-//   console.log(event, 'message');
-// });
 
 const getSession = () => {
   const keys = ['apis', 'openMock'];
@@ -15,7 +12,10 @@ const getSession = () => {
 };
 class myXML {
   constructor() {
+    this._method = '';
     const xhr = new sourceXML();
+    xhr._open = xhr.open;
+    const that = this;
     for (let attr in xhr) {
       if (attr === 'onreadystatechange') {
         xhr.onreadystatechange = (...args) => {
@@ -26,6 +26,15 @@ class myXML {
           this.onreadystatechange && this.onreadystatechange.apply(this, args);
         };
         continue;
+      }
+      if (attr === 'open') {
+        xhr.open = function (...args) {
+          if (args.length === 0) {
+          } else {
+            that._method = args[0];
+            xhr._open(...args);
+          }
+        };
       }
       if (attr === 'onload') {
         xhr.onload = (...args) => {
@@ -42,20 +51,11 @@ class myXML {
       if (['responseText', 'response'].includes(attr)) {
         Object.defineProperty(this, attr, {
           get: () => {
-            // console.log('this', this);
             const resValue =
               this[`_${attr}`] == undefined ? xhr[attr] : this[`_${attr}`];
-            // console.log(
-            //   'attr',
-            //   attr,
-            //   'get',
-            //   this[`_${attr}`],
-            //   JSON.parse(resValue)
-            // );
             return resValue;
           },
           set: (val) => {
-            // console.log('attr', attr, val);
             return (this[`_${attr}`] = val);
           },
           enumerable: true,
@@ -70,7 +70,11 @@ class myXML {
     }
   }
   modifilyResponse() {
-    const { apis, openMock } = getSession();
+    const { apis } = getSession();
+    if (!apis) {
+      console.warn('apis找不到');
+      return;
+    }
     let match = false;
     apis.forEach((item) => {
       if (item.disabled === true) {
@@ -82,7 +86,14 @@ class myXML {
       const { schema } = item;
       const { paths } = schema;
       const matchTarget = paths.find((inner) => {
-        if (this.responseURL.indexOf(inner.uri) > -1) {
+        const { methods, uri, disabled } = inner;
+        if (disabled) {
+          return false;
+        }
+        if (
+          this.responseURL.indexOf(uri) > -1 &&
+          String(this._method).toLocaleLowerCase() === methods
+        ) {
           return true;
         }
         return false;

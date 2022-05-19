@@ -38,6 +38,15 @@ export default defineStore(ID, {
     };
   },
   actions: {
+    addNewNode(formValue) {
+      const { moduleIdx, ...otherProps } = formValue;
+      const target = this.apis[moduleIdx];
+      if (!target) {
+        return;
+      }
+      target.schema.paths.push({ id: processID(), ...otherProps });
+      this.saveLocal();
+    },
     changeGlobalMock(flag) {
       this.openMock = flag;
       this.saveLocal();
@@ -92,6 +101,15 @@ export default defineStore(ID, {
       this.apis.splice(index, 1);
       this.saveLocal();
     },
+    removeItem(idx, id) {
+      const target = this.apis[idx];
+      if (!target) {
+        return;
+      }
+      const index = target.schema.paths.findIndex((item) => item.id === id);
+      target.schema.paths.splice(index, 1);
+      this.saveLocal();
+    },
     edit(form) {
       const { id } = form;
       const target = this.apis.find((item) => item.id === id);
@@ -123,13 +141,13 @@ export default defineStore(ID, {
         return;
       }
       console.log(target);
-      const { uri, method, id } = formValue;
+      const { uri, methods, id } = formValue;
       try {
         const paths = target['schema']['paths'];
         const idx = paths.findIndex((item) => item.id === id);
         console.log(idx);
         if (idx === -1) {
-          throw Error('找不到', uri, method);
+          throw Error('找不到', uri, methods);
         }
         paths[idx] = formValue;
         console.log('formValue', formValue);

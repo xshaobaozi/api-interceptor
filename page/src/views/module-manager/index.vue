@@ -3,7 +3,9 @@
     <el-col :span="24" class="mb10">
       <el-button type="primary" @click="handleCreate">创建</el-button>
       <el-button type="primary" @click="handleAllImport">全量导入</el-button>
-      <el-button type="primary" @click="handleopenMock">{{apiStore.openMock?'关闭Mock':'打开Mock'}}</el-button>
+      <el-button type="primary" @click="handleopenMock">{{
+        apiStore.openMock ? '关闭Mock' : '打开Mock'
+      }}</el-button>
     </el-col>
     <el-col :span="24">
       <el-table :data="apiStore.apis" class="modules_manger_table">
@@ -91,7 +93,7 @@
           </el-form-item>
           <el-form-item label="数据源" prop="schema">
             <JsonEdit
-              :show="dialogConfig.isShow"
+              :refresh="dialogConfig.isShow"
               v-model:value="form.schema"
               @change="handleSchemaChange"
             ></JsonEdit>
@@ -100,7 +102,8 @@
             <el-button size="small" type="primary" @click="handleSave"
               >保存</el-button
             >
-            <el-button size="small" @click="handleReset">重置</el-button>
+            <el-button size="small" @click="handleClose">取消</el-button>
+            <!-- <el-button size="small" @click="handleReset">重置</el-button> -->
           </el-form-item>
         </el-form>
       </section>
@@ -166,9 +169,12 @@ const dialogConfig = reactive({
   isShow: false,
   isEdit: false,
 });
+const handleClose = () => {
+  dialogConfig.isShow = false;
+};
 const handleopenMock = () => {
-  apiStore.changeGlobalMock(!apiStore.openMock)
-}
+  apiStore.changeGlobalMock(!apiStore.openMock);
+};
 const handleChangeDisabled = (item, disabled) => {
   apiStore.edit({
     ...item,
@@ -205,7 +211,12 @@ const handleCreate = () => {
   dialogConfig.isShow = true;
   dialogConfig.isEdit = Mode.Create;
   form.name = '';
-  form.schema = {};
+  form.schema = {
+    info: {
+      title: '',
+    },
+    paths: [],
+  };
   form.merge = false;
   form.id = '';
   form.from = fromType.Owner;
@@ -273,10 +284,9 @@ const handleReset = () => {
 };
 </script>
 <style lang="scss">
-.modules_manger_table{
-  .cell{
+.modules_manger_table {
+  .cell {
     font-size: 12px;
-
   }
 }
 </style>

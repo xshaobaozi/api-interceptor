@@ -33,7 +33,7 @@ export const toObj = (schema) => {
 export const vaildSchemaOwner = (schema, isAll = false) => {
   const schemaWapper = toObj(schema);
   if (schemaWapper.message) {
-    return new Error(schemaWapper.message);
+    return new Error('schemaWapper.message');
   }
   if (!isAll) {
     if (!schemaWapper.info) {
@@ -66,7 +66,6 @@ export const vaildSchemaOwner = (schema, isAll = false) => {
       return new Error('缺少array[i].response');
     }
   }
-  return true;
 };
 export const vaildSchemaAll = (schema) => {
   const schemaWapper = toObj(schema);

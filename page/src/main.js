@@ -9,8 +9,8 @@ import { createPinia } from 'pinia';
 import '@/scss/variables.scss';
 import { addListener } from './helper/chrome';
 const app = createApp(App);
-app.use(ElementPlus);
 app.use(createPinia());
+app.use(ElementPlus);
 // app.use(router);
 app.mount('#app');
 
