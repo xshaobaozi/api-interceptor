@@ -5,7 +5,7 @@ const isPro = process.env.NODE_ENV === 'production';
 const chromeMock = {
   runtime: {
     sendMessage(msg, _fn) {
-      console.log(msg);
+      console.log('sendMessage', msg);
     },
     onMessage: {
       addListener(...args) {

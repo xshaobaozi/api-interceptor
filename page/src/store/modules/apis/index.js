@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ElMessage } from 'element-plus';
 import { setStore, getStore } from './../../../helper/chrome';
 import { schemaMerge } from '@/helper/schema';
+import { sendMessage } from '@/helper/chrome';
 import dayjs from 'dayjs';
 
 export const parse = (obj) => {
@@ -51,6 +52,9 @@ export default defineStore(ID, {
     saveLocal() {
       console.log('保存到local ', this.apis);
       setStore({ apis: this.apis });
+      sendMessage({ apis: this.apis }, (...args) => {
+        console.log('sendMessage', ...args);
+      });
     },
     add(form) {
       const { name } = form;
@@ -94,9 +98,8 @@ export default defineStore(ID, {
       this.saveLocal();
     },
     editAll(apis) {
-      this.apis = apis
+      this.apis = apis;
       this.saveLocal();
-
     },
     // TODO修改数据逻辑有问题
     editItem(formValue) {
