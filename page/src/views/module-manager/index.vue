@@ -91,9 +91,22 @@
               <el-radio-button :label="false">覆盖</el-radio-button>
             </el-radio-group>
           </el-form-item>
+          <el-form-item label="上传">
+            <el-upload
+              ref="uploadRef"
+              :auto-upload="false"
+              :on-change="handleUpload"
+              :file-list="fileList"
+              :show-file-list="false"
+            >
+              <template #trigger>
+                <el-button type="primary">上传</el-button>
+              </template>
+            </el-upload>
+          </el-form-item>
           <el-form-item label="数据源" prop="schema">
             <JsonEdit
-              :refresh="dialogConfig.isShow"
+              :refresh="dialogConfig.refresh"
               v-model:value="form.schema"
               @change="handleSchemaChange"
             ></JsonEdit>
@@ -132,6 +145,26 @@ const form = reactive({
   merge: false,
   id: '',
 });
+const fileList = ref([]);
+const handleUpload = () => {
+  if (fileList.value.length > 1) {
+    fileList.value.splice(0, 1);
+  }
+  const file = fileList.value[0].raw;
+  const reader = new FileReader();
+  reader.readAsText(file, 'utf8');
+  reader.onload = function () {
+    try {
+      const fileJSON = JSON.parse(this.result);
+      form.schema = fileJSON;
+      dialogConfig.refresh = !dialogConfig.refresh;
+    } catch (err) {
+      ElMessage.error('文件格式不正确');
+      // form.schema = fileJSON
+    }
+    handleFromChange();
+  };
+};
 const rules = computed(() => {
   const name = [{ required: true, message: '请输入模块名', trigger: 'change' }];
   const from = [{ required: true, message: '请选择来源', trigger: 'change' }];
@@ -168,6 +201,7 @@ const Mode = {
 const dialogConfig = reactive({
   isShow: false,
   isEdit: false,
+  refresh: false,
 });
 const handleClose = () => {
   dialogConfig.isShow = false;
@@ -191,10 +225,12 @@ const handleEdit = (row) => {
   form.merge = false;
   form.schema = row.schema;
   dialogConfig.isEdit = Mode.Edit;
+  dialogConfig.refresh = !dialogConfig.refresh;
   dialogConfig.isShow = true;
 };
 const handleAllImport = () => {
   dialogConfig.isShow = true;
+  dialogConfig.refresh = !dialogConfig.refresh;
   dialogConfig.isEdit = Mode.All;
   form.from = fromType.All;
   form.name = '';
@@ -209,6 +245,7 @@ const handleAllImport = () => {
 };
 const handleCreate = () => {
   dialogConfig.isShow = true;
+  dialogConfig.refresh = !dialogConfig.refresh;
   dialogConfig.isEdit = Mode.Create;
   form.name = '';
   form.schema = {
