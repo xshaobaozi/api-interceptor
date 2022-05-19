@@ -29,7 +29,9 @@ appendMcokScirpt();
 //   }
 //   window.XMLHttpRequest = sourceXML;
 // };
-window.dispatchEvent(new CustomEvent(typeEvent.toPage));
+window.addEventListener('load', () => {
+  window.dispatchEvent(new CustomEvent(typeEvent.toPage));
+})
 connect.onMessage.addListener((res) => {
   // console.log("content 长链接 ", res);
   const { action, apis, openMock } = res;
