@@ -44,6 +44,8 @@ section,
 header,
 footer {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 @each $key, $value in $colors {
@@ -139,4 +141,23 @@ footer {
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: #409eff;
+}
+
+.el-form {
+  .el-form-item {
+    & > label,& >.el-form-item__label {
+      &:before {
+        content: '';
+        width: 6.38px;
+        margin-right: 4px;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.jsoneditor-menu {
+  & > a{
+    display: none;
+  }
 }

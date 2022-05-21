@@ -1,7 +1,7 @@
 <template>
   <section class="edit-api">
     <section class="edit-api__left">
-      <el-button type="primary" class="mb20" @click="handlIsOpen(true)"
+      <el-button size="small" type="primary" class="mb20" @click="handlIsOpen(true)"
         >添加</el-button
       >
       <el-input v-model="filterValue" placeholder="请输入过滤名字"></el-input>
