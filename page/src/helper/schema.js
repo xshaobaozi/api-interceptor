@@ -32,37 +32,37 @@ export const toObj = (schema) => {
 // }
 export const vaildSchemaOwner = (schema, isAll = false) => {
   const schemaWapper = toObj(schema);
-  if (schemaWapper.message) {
-    return new Error('schemaWapper.message');
+  if (typeof schemaWapper === 'string') {
+    return new Error('格式错误');
   }
   if (!isAll) {
-    if (!schemaWapper.info) {
-      return new Error('缺少schema.info');
+    if (!schemaWapper.hasOwnProperty('info')) {
+      return new Error('缺少info.title');
     }
     if (!schemaWapper.info.title) {
-      return new Error('缺少schema.info.title');
+      return new Error('缺少info.title');
     }
   }
   if (!schemaWapper.paths) {
-    return new Error('缺少schema.paths');
+    return new Error('缺少paths');
   }
   if (!Array.isArray(schemaWapper.paths)) {
     return new Error('必须为数组');
   }
   for (let item in schemaWapper.paths) {
-    if (item.hasOwnProperty('desc')) {
+    if (!schemaWapper.paths[item].hasOwnProperty('desc')) {
       return new Error('缺少array[i].desc');
     }
-    if (item.hasOwnProperty('uri')) {
+    if (!schemaWapper.paths[item].hasOwnProperty('uri')) {
       return new Error('缺少array[i].uri');
     }
-    if (item.hasOwnProperty('method')) {
-      return new Error('缺少array[i].method');
+    if (!schemaWapper.paths[item].hasOwnProperty('methods')) {
+      return new Error('缺少array[i].methods');
     }
-    if (item.hasOwnProperty('code')) {
+    if (!schemaWapper.paths[item].hasOwnProperty('code')) {
       return new Error('缺少array[i].code');
     }
-    if (item.hasOwnProperty('response')) {
+    if (!schemaWapper.paths[item].hasOwnProperty('response')) {
       return new Error('缺少array[i].response');
     }
   }

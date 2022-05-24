@@ -2,7 +2,7 @@
   <el-button @click="handleSend">Axios Get请求</el-button>
   <el-button @click="handleSendXML">XMLHttpRequest Get请求</el-button>
   <el-button @click="handleMockStatus" type="primary">{{
-    apiStore.openMock ? '开启Mock' : '关闭Mock'
+    apiStore.openMock ? '关闭Mock' : '开启Mock'
   }}</el-button>
 </template>
 

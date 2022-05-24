@@ -20,12 +20,11 @@
 import ModuleManager from '@/views/module-manager/index.vue';
 import EditApi from '@/views/edit-api/index.vue';
 import MockView from '@/views/mock-view/index.vue';
-const isPro = process.env.NODE_ENV === 'production';
 import { ref } from 'vue';
 import { useApiStore } from '@/store';
+const isPro = process.env.NODE_ENV === 'production';
 const apiStore = useApiStore();
 apiStore.init();
 const tabValue = ref('module');
 </script>
-<style lang="scss">
-</style>
+<style lang="scss"></style>
