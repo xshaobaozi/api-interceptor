@@ -5,10 +5,10 @@
 
   "description": "修改浏览器请求和管理接口",
   "icons": {
-    "16": "images/16_gray.png",
-    "32": "images/32_gray.png",
-    "48": "images/48.png",
-    "128": "images/128.png"
+    "16": "images/fish.png",
+    "32": "images/fish.png",
+    "48": "images/fish.png",
+    "128": "images/fish.png"
   },
 
   "background": {
