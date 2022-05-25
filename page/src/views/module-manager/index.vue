@@ -1,13 +1,26 @@
 <template>
   <el-row class="p10">
     <el-col :span="24" class="mb10">
-      <el-button size="small" type="primary" @click="handleCreate">创建</el-button>
-      <el-button size="small" type="primary" @click="handleAllImport">全量导入</el-button>
-      <el-button size="small" type="primary" @click="handleExportData" :disabled="apiStore.apis.length === 0">导出数据
+      <el-button size="small" type="primary" @click="handleCreate"
+        >创建</el-button
+      >
+      <el-button size="small" type="primary" @click="handleAllImport"
+        >全量导入</el-button
+      >
+      <el-button
+        size="small"
+        type="primary"
+        @click="handleExportData"
+        :disabled="apiStore.apis.length === 0"
+        >导出数据
       </el-button>
-      <el-button size="small" type="primary" @click="handleopenMock" :disabled="apiStore.apis.length === 0">{{
-          apiStore.openMock ? '关闭Mock' : '打开Mock'
-      }}</el-button>
+      <el-button
+        size="small"
+        type="primary"
+        @click="handleopenMock"
+        :disabled="apiStore.apis.length === 0"
+        >{{ apiStore.openMock ? '关闭Mock' : '打开Mock' }}</el-button
+      >
     </el-col>
     <el-col :span="24">
       <el-table :data="apiStore.apis" class="modules_manger_table">
@@ -21,35 +34,88 @@
         </el-table-column>
         <el-table-column label="操作" width="280px">
           <template #default="scope">
-            <el-button size="small" type="primary" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button size="small" type="primary" @click="handleChangeDisabled(scope.row, false)">启用</el-button>
-            <el-button size="small" type="danger" @click="handleChangeDisabled(scope.row, true)">禁用</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button
+              size="small"
+              type="primary"
+              @click="handleEdit(scope.row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="small"
+              type="primary"
+              @click="handleChangeDisabled(scope.row, false)"
+              >启用</el-button
+            >
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleChangeDisabled(scope.row, true)"
+              >禁用</el-button
+            >
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
     </el-col>
-    <el-dialog v-model="dialogConfig.isShow" :title="dialogConfig.isEdit === Mode.Edit ? '编辑' : '创建'" width="80%">
+    <el-dialog
+      v-model="dialogConfig.isShow"
+      :title="dialogConfig.isEdit === Mode.Edit ? '编辑' : '创建'"
+      width="80%"
+    >
       <section class="p10">
-        <el-form :model="form" label-width="80px" label-position="left" :rules="rules" ref="$form">
-          <el-form-item label="模块名" prop="name" v-if="dialogConfig.isEdit !== Mode.All">
+        <el-form
+          :model="form"
+          label-width="80px"
+          label-position="left"
+          :rules="rules"
+          ref="$form"
+        >
+          <el-form-item
+            label="模块名"
+            prop="name"
+            v-if="dialogConfig.isEdit !== Mode.All"
+          >
             <el-input v-model="form.name" />
           </el-form-item>
-          <el-form-item label="来源" prop="from" v-if="dialogConfig.isEdit !== Mode.All">
-            <el-radio-group v-model="form.from" size="small" @change="handleFromChange">
+          <el-form-item
+            label="来源"
+            prop="from"
+            v-if="dialogConfig.isEdit !== Mode.All"
+          >
+            <el-radio-group
+              v-model="form.from"
+              size="small"
+              @change="handleFromChange"
+            >
               <el-radio-button :label="fromType.Owner">插件</el-radio-button>
-              <el-radio-button :label="fromType.Kepler">Swagger</el-radio-button>
+              <el-radio-button :label="fromType.Kepler"
+                >Swagger</el-radio-button
+              >
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="合并" prop="merge" v-if="dialogConfig.isEdit === Mode.Edit">
+          <el-form-item
+            label="合并"
+            prop="merge"
+            v-if="dialogConfig.isEdit === Mode.Edit"
+          >
             <el-radio-group v-model="form.merge" size="small">
               <el-radio-button :label="true">合并</el-radio-button>
               <el-radio-button :label="false">覆盖</el-radio-button>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="上传">
-            <el-upload ref="uploadRef" :auto-upload="false" :on-change="handleUpload" :file-list="fileList"
-              :show-file-list="false">
+            <el-upload
+              ref="uploadRef"
+              :auto-upload="false"
+              :on-change="handleUpload"
+              :file-list="fileList"
+              :show-file-list="false"
+            >
               <template #trigger>
                 <el-button size="small" type="primary">上传</el-button>
               </template>
@@ -59,11 +125,17 @@
             </p>
           </el-form-item>
           <el-form-item label="数据源" prop="schema">
-            <JsonEdit :refresh="dialogConfig.refresh" v-model:value="form.schema" @change="handleSchemaChange">
+            <JsonEdit
+              :refresh="dialogConfig.refresh"
+              v-model:value="form.schema"
+              @change="handleSchemaChange"
+            >
             </JsonEdit>
           </el-form-item>
           <el-form-item>
-            <el-button size="small" type="primary" @click="handleSave">保存</el-button>
+            <el-button size="small" type="primary" @click="handleSave"
+              >保存</el-button
+            >
             <el-button size="small" @click="handleClose">取消</el-button>
             <!-- <el-button size="small" @click="handleReset">重置</el-button> -->
           </el-form-item>
@@ -77,6 +149,7 @@
 import { ref, reactive, getCurrentInstance, computed, nextTick } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { useApiStore } from '@/store';
+import { processID } from '@/store/modules/apis'
 import { saveJSON } from '@/helper/utils';
 import {
   vaildSchemaOwner,
@@ -209,6 +282,7 @@ const handleCreate = () => {
       {
         desc: '插件示例模板，自行修改',
         uri: '/api/example',
+        id: processID(),
         methods: 'get',
         disabled: true,
         finish: false,

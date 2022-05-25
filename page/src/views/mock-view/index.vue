@@ -1,5 +1,6 @@
 <template>
   <el-button @click="handleSend">Axios Get请求</el-button>
+  <el-button @click="handleSendFetch">Fetch Get请求</el-button>
   <el-button @click="handleSendXML">XMLHttpRequest Get请求</el-button>
   <el-button @click="handleMockStatus" type="primary">{{
     apiStore.openMock ? '关闭Mock' : '开启Mock'
@@ -10,6 +11,7 @@
 import axios from 'axios';
 import { ref } from 'vue';
 import XMLMock from '../../helper/mock';
+import { toPageEvent } from '../../helper/mock';
 import { useApiStore } from '@/store';
 const apiStore = useApiStore();
 const isMock = ref(false);
@@ -23,9 +25,8 @@ const handleOpenMock = () => {
 };
 const handleMockStatus = () => {
   apiStore.changeGlobalMock(!apiStore.openMock);
-  handleOpenMock();
+  toPageEvent()
 };
-handleOpenMock();
 const url = 'https://restapi.amap.com/v3/place/text';
 const params = 'key=d575ee75cfb2dee118eac9d49927a9b3&keywords=金山软件园';
 const json = {
@@ -41,7 +42,17 @@ const handleSend = () => {
       console.log(res);
     });
 };
-
+const handleSendFetch = () => {
+  fetch(`${url}?${params}`, {
+    method: 'get',
+  }).then(res => {
+    console.log('fetch res', res)
+    return res.text()
+  })
+  .then(res => {
+    console.log(res)
+  })
+}
 const handleSendXML = () => {
   const xhr = new XMLHttpRequest();
   xhr.open('get', `${url}?${params}`, true);

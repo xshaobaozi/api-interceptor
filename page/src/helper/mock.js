@@ -1,6 +1,6 @@
 import { preKey, parse, typeEvent } from './event';
 const sourceXML = window.XMLHttpRequest;
-
+const sourceFetch = window.fetch.bind(window);
 
 const getSession = () => {
   const keys = ['apis', 'openMock'];
@@ -9,6 +9,47 @@ const getSession = () => {
     source[key] = parse(window.sessionStorage.getItem(`${preKey}${key}`));
   });
   return source;
+};
+const findModifily = (url, _methods) => {
+  if (!url || !_methods) {
+    return;
+  }
+  const { apis } = getSession();
+  if (!apis) {
+    console.warn('apis找不到');
+    return;
+  }
+  let match = false;
+  let responseText = undefined;
+  apis.forEach((item) => {
+    if (item.disabled === true) {
+      return;
+    }
+    if (match === true) {
+      return;
+    }
+    const { schema } = item;
+    const { paths } = schema;
+    const matchTarget = paths.find((inner) => {
+      const { methods, uri, disabled } = inner;
+      if (disabled) {
+        return false;
+      }
+      if (
+        url.indexOf(uri) > -1 &&
+        String(_methods).toLocaleLowerCase() === methods
+      ) {
+        return true;
+      }
+      return false;
+    });
+    if (!matchTarget) {
+      return;
+    }
+    match = true;
+    responseText = matchTarget.response;
+  });
+  return responseText;
 };
 class myXML {
   constructor() {
@@ -70,57 +111,89 @@ class myXML {
     }
   }
   modifilyResponse() {
-    const { apis } = getSession();
-    if (!apis) {
-      console.warn('apis找不到');
-      return;
+    const resText = findModifily(this.responseURL, this._method);
+    if (resText) {
+      this.responseText = resText;
+      this.response = resText;
     }
-    let match = false;
-    apis.forEach((item) => {
-      if (item.disabled === true) {
-        return;
-      }
-      if (match === true) {
-        return;
-      }
-      const { schema } = item;
-      const { paths } = schema;
-      const matchTarget = paths.find((inner) => {
-        const { methods, uri, disabled } = inner;
-        if (disabled) {
-          return false;
-        }
-        if (
-          this.responseURL.indexOf(uri) > -1 &&
-          String(this._method).toLocaleLowerCase() === methods
-        ) {
-          return true;
-        }
-        return false;
-      });
-      if (!matchTarget) {
-        return;
-      }
-      match = true;
-      this.responseText = matchTarget.response;
-      this.response = matchTarget.response;
-    });
   }
 }
-new myXML();
+const myFetch = (...args) => {
+  if (args.length === 0) {
+    return Promise.reject();
+  }
+  let fetchUrl;
+  let fetchMethods;
+  if (args.length === 1) {
+    fetchUrl = args[0];
+  }
+  if (args.length === 2) {
+    fetchUrl = args[0];
+    fetchMethods = typeof args[1] === 'object' && args[1].method;
+  }
+  const resText = findModifily(fetchUrl, fetchMethods);
+  const encodeText =
+    typeof resText === ' object' ? JSON.stringify(resText) : resText;
+  return sourceFetch(...args).then((response) => {
+    if (!resText) {
+      return response;
+    }
+    const stream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(
+          new TextEncoder().encode(JSON.stringify(encodeText))
+        );
+        controller.close();
+      },
+    });
 
-const handleOpenMock = (isOpen) => {
+    const newResponse = new Response(stream, {
+      headers: response.headers,
+      status: response.status,
+      statusText: response.statusText,
+    });
+    const proxy = new Proxy(newResponse, {
+      get: function (target, name) {
+        switch (name) {
+          case 'ok':
+          case 'redirected':
+          case 'type':
+          case 'url':
+          case 'useFinalURL':
+          case 'body':
+          case 'bodyUsed':
+            return response[name];
+        }
+        return target[name];
+      },
+    });
+
+    for (let key in proxy) {
+      if (typeof proxy[key] === 'function') {
+        proxy[key] = proxy[key].bind(newResponse);
+      }
+    }
+
+    return proxy;
+  });
+};
+myFetch();
+new myXML();
+export const handleOpenMock = (isOpen) => {
   if (isOpen) {
     console.log('开启');
     window.XMLHttpRequest = myXML;
+    window.fetch = myFetch;
     return;
   }
   console.log('禁用');
   window.XMLHttpRequest = sourceXML;
+  window.fetch = sourceFetch;
 };
-window.addEventListener(typeEvent.toPage, (event) => {
+export const toPageEvent = (event) => {
   const { apis, openMock } = getSession();
   handleOpenMock(openMock);
-});
+};
+window.addEventListener(typeEvent.toPage, toPageEvent);
 
 export default myXML;
